@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Abby-Inspired AI Therapy Companion</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-4oV0m6XG9U5s7Vw2XFr2wP6ywsi7vhX1e4+gWwOZzY1zlkrYiJ7ABjYVFxzMOG66QvPa5qlmDVyF1lVQx3YFQw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="logo">Therapy Chatbot</div>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#therapy-types">Therapy</a>
+        <a href="#topics">Topics</a>
+        <a href="#enterprise">Enterprise</a>
+        <a href="#chat">Chat</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="cta-group">
+        <button class="btn secondary">Login</button>
+        <button class="btn primary">Get Started</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <p class="badge">AI Therapy · Available 24/7</p>
+          <h1>Judgement-free support in your pocket.</h1>
+          <p class="lead">
+            Chat with an empathetic AI guide modeled after the Abby experience—any time, any language, any topic.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary large">Start Chatting Now</button>
+            <button class="btn ghost large">See How It Works</button>
+          </div>
+          <div class="hero-stats">
+            <div><strong>24,000+</strong><span>People supported</span></div>
+            <div><strong>26</strong><span>Languages</span></div>
+            <div><strong>100%</strong><span>Anonymous</span></div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <p class="card-title">Today’s Check-in</p>
+          <div class="card-snippet">
+            <p>"I’m feeling anxious about tomorrow’s meeting."</p>
+            <span>You</span>
+          </div>
+          <div class="card-snippet bot">
+            <p>
+              "Let’s walk through the worry together and build a plan so you feel grounded."
+            </p>
+            <span>Therapy Chatbot</span>
+          </div>
+          <button class="btn primary full">Talk Now</button>
+        </div>
+      </section>
+
+      <section id="therapy-types" class="grid-section">
+        <div class="section-header">
+          <h2>Therapy approaches you can explore</h2>
+          <p>Blend classic modalities with modern AI reflections.</p>
+        </div>
+        <div class="grid four">
+          <article>
+            <h3>Psychodynamic</h3>
+            <p>Unpack patterns and narratives that shape your reactions.</p>
+          </article>
+          <article>
+            <h3>CBT</h3>
+            <p>Reframe automatic thoughts with actionable exercises.</p>
+          </article>
+          <article>
+            <h3>DBT</h3>
+            <p>Practice radical acceptance, mindfulness, and wise-mind tools.</p>
+          </article>
+          <article>
+            <h3>Gestalt & Adlerian</h3>
+            <p>Stay present, deepen awareness, and align values with actions.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="topics" class="grid-section alt">
+        <div class="section-header">
+          <h2>Topics and struggles</h2>
+          <p>Tailored prompts for the moments that matter most.</p>
+        </div>
+        <div class="grid three">
+          <article>
+            <h4>Depression & Low Mood</h4>
+            <p>Daily mood check-ins, compassion scripts, and energizing micro-goals.</p>
+          </article>
+          <article>
+            <h4>Anxiety & Stress</h4>
+            <p>Breathing cues, grounding exercises, and exposure journaling.</p>
+          </article>
+          <article>
+            <h4>Relationships & Conflict</h4>
+            <p>Perspective-taking prompts and boundary-setting templates.</p>
+          </article>
+          <article>
+            <h4>Trauma & Healing</h4>
+            <p>Safety planning, resourcing, and gentle reframing.</p>
+          </article>
+          <article>
+            <h4>Work-Life Balance</h4>
+            <p>Burnout prevention rituals and productivity reflections.</p>
+          </article>
+          <article>
+            <h4>Recovery & Habits</h4>
+            <p>Track triggers, celebrate wins, and recommit without shame.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="struggles" class="pill-section">
+        <div>
+          <h2>Common struggles</h2>
+          <p>Tap a topic to receive instant exercises and grounding questions.</p>
+        </div>
+        <div class="pill-wrapper">
+          <span>Loneliness</span>
+          <span>Bullying</span>
+          <span>Alcohol & Recovery</span>
+          <span>Work-Life Balance</span>
+          <span>Relationship Conflicts</span>
+          <span>Procrastination</span>
+          <span>Low Self-Esteem</span>
+        </div>
+      </section>
+
+      <section id="enterprise" class="grid-section">
+        <div class="section-header">
+          <h2>Enterprise ready, wherever care is needed</h2>
+          <p>Bring always-on mental health support to every team.</p>
+        </div>
+        <div class="grid four compact">
+          <article>
+            <h4>Corporate & Enterprise</h4>
+            <p>Boost engagement with confidential, on-demand support.</p>
+          </article>
+          <article>
+            <h4>Schools & Universities</h4>
+            <p>Give students a safe space to process stress outside office hours.</p>
+          </article>
+          <article>
+            <h4>Clinicians & Nurses</h4>
+            <p>Round-the-clock decompression companion for front-line teams.</p>
+          </article>
+          <article>
+            <h4>Military & Veterans</h4>
+            <p>Guided reflections tailored to service-related transitions.</p>
+          </article>
+          <article>
+            <h4>Airline & Travel Crews</h4>
+            <p>Jet-lag friendly prompts for rest, focus, and emotional hygiene.</p>
+          </article>
+          <article>
+            <h4>Professional Athletes</h4>
+            <p>Mental rehearsal cues and post-game decompression.</p>
+          </article>
+          <article>
+            <h4>Law Enforcement</h4>
+            <p>Confidential venting channel with resilience training snippets.</p>
+          </article>
+          <article>
+            <h4>Incarcerated Individuals</h4>
+            <p>Evidence-informed programming accessible from secure devices.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="languages" class="pill-section alt">
+        <div>
+          <h2>Available in 26 languages</h2>
+          <p>Switch instantly for a more authentic conversation.</p>
+        </div>
+        <div class="language-grid">
+          <span>English</span><span>Español</span><span>हिंदी</span><span>Deutsch</span><span>Français</span>
+          <span>العربية</span><span>中文 (简体)</span><span>日本語</span><span>Italiano</span><span>Português</span>
+          <span>한국어</span><span>Türkçe</span><span>Русский</span><span>Nederlands</span><span>Svenska</span>
+          <span>Polski</span><span>Magyar</span><span>Čeština</span><span>Ελληνικά</span><span>ไทย</span>
+          <span>עברית</span><span>Indonesia</span><span>Tagalog</span><span>Tiếng Việt</span><span>Українська</span>
+          <span>Malay</span>
+        </div>
+      </section>
+
+      <section id="testimonials" class="testimonial-section">
+        <div class="section-header">
+          <h2>Community reflections</h2>
+          <p>Real people, real breakthroughs with their AI companion.</p>
+        </div>
+        <div class="testimonial-grid">
+          <article>
+            <p>"I didn’t expect an AI to understand me so well. The nightly prompts keep me honest."</p>
+            <h4>Tara Collier</h4>
+          </article>
+          <article>
+            <p>"No judgement, just thoughtful questions that help me get to the root fast."</p>
+            <h4>Chris Peterson</h4>
+          </article>
+          <article>
+            <p>"Abby-style check-ins helped me navigate burnout without waiting weeks for therapy."</p>
+            <h4>Kimberly Chang</h4>
+          </article>
+          <article>
+            <p>"It’s my always-on companion for late-night spirals."</p>
+            <h4>Olivia Banks</h4>
+          </article>
+          <article>
+            <p>"Skeptical at first, but the guidance feels like a wise friend on standby."</p>
+            <h4>James Clark</h4>
+          </article>
+          <article>
+            <p>"I finally feel seen even on the nights I can’t reach my therapist."</p>
+            <h4>Emma Fitzgerald</h4>
+          </article>
+        </div>
+      </section>
+
+      <section id="chat" class="chat-section">
+        <div class="section-header">
+          <h2>Ready to talk?</h2>
+          <p>Jump into the real-time chat experience below.</p>
+        </div>
+        <div class="chat-wrapper">
+          <div class="card">
+            <div class="card-header msg_head">
+              <div class="d-flex bd-highlight">
+                <div class="img_cont">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/387/387569.png"
+                    class="rounded-circle user_img"
+                    alt="Chatbot avatar"
+                  />
+                  <span class="online_icon"></span>
+                </div>
+                <div class="user_info">
+                  <span>Therapy Chatbot</span>
+                  <p>Available 24/7</p>
+                </div>
+              </div>
+            </div>
+            <div id="messageFormeight" class="card-body msg_card_body"></div>
+            <div class="card-footer">
+              <form id="messageArea" class="input-group">
+                <input
+                  type="text"
+                  id="text"
+                  name="msg"
+                  placeholder="Type your message..."
+                  autocomplete="off"
+                  class="form-control type_msg"
+                  required
+                />
+                <div class="input-group-append">
+                  <button type="submit" id="send" class="input-group-text send_btn">
+                    <i class="fas fa-location-arrow"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="faq-section">
+        <div class="section-header">
+          <h2>Frequently asked questions</h2>
+          <p>Everything you need to know before you dive in.</p>
+        </div>
+        <div class="faq-list">
+          <article>
+            <button class="faq-toggle">
+              <span>Is this a replacement for therapy?</span><i class="fas fa-plus"></i>
+            </button>
+            <p>
+              The chatbot offers emotional support and coaching inspired by Abby, but it is not a licensed therapist. Please reach out to professionals during crises.
+            </p>
+          </article>
+          <article>
+            <button class="faq-toggle">
+              <span>How does it personalize advice?</span><i class="fas fa-plus"></i>
+            </button>
+            <p>
+              Interactions are embedded via vector search, allowing context-aware responses that remember your themes session by session.
+            </p>
+          </article>
+          <article>
+            <button class="faq-toggle">
+              <span>Can I use it alongside therapy?</span><i class="fas fa-plus"></i>
+            </button>
+            <p>
+              Absolutely. Many people bring summaries from these chats into their human sessions for deeper work.
+            </p>
+          </article>
+          <article>
+            <button class="faq-toggle">
+              <span>What does the free tier include?</span><i class="fas fa-plus"></i>
+            </button>
+            <p>
+              Core text and voice chat, guided reflections, and crisis resources are included. Upgrade for mood analytics, unlimited threads, and enterprise controls.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta-final">
+        <h2>Experience compassionate AI guidance whenever you need it.</h2>
+        <p>Start chatting in seconds. Cancel anytime.</p>
+        <div class="hero-actions">
+          <button class="btn primary large">Start Free</button>
+          <button class="btn ghost large">Contact Sales</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <p>© {{ 2025 }} Therapy Chatbot. Inspired by Abby’s safe support experience.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Resources</a>
+        <a href="#">Contact</a>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        $("#messageArea").on("submit", function (event) {
+          const date = new Date();
+          const hour = String(date.getHours()).padStart(2, "0");
+          const minute = String(date.getMinutes()).padStart(2, "0");
+          const str_time = hour + ":" + minute;
+          const rawText = $("#text").val();
+
+          const userHtml =
+            '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' +
+            rawText +
+            '<span class="msg_time_send">' +
+            str_time +
+            '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg" alt="User avatar"></div></div>';
+
+          $("#text").val("");
+          $("#messageFormeight").append(userHtml);
+
+          $.ajax({
+            data: {
+              msg: rawText,
+            },
+            type: "POST",
+            url: "/get",
+          }).done(function (data) {
+            const botHtml =
+              '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="rounded-circle user_img_msg" alt="Bot avatar"></div><div class="msg_cotainer">' +
+              data +
+              '<span class="msg_time">' +
+              str_time +
+              "</span></div></div>";
+            $("#messageFormeight").append($.parseHTML(botHtml));
+            $("#messageFormeight").scrollTop($("#messageFormeight")[0].scrollHeight);
+          });
+          event.preventDefault();
+        });
+
+        $(".faq-toggle").on("click", function () {
+          const isOpen = $(this).parent().hasClass("open");
+          $(".faq-list article").removeClass("open");
+          if (!isOpen) {
+            $(this).parent().addClass("open");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

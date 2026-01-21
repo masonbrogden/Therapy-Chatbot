@@ -1,0 +1,234 @@
+.plan-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.plan-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1.5rem 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.form-group select,
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.focus-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: #ecf0f1;
+  border: 2px solid transparent;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #2c3e50;
+}
+
+.tag:hover {
+  border-color: #3498db;
+}
+
+.tag.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.plan-error {
+  color: #c0392b;
+}
+
+.form-group small {
+  display: block;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.btn-generate,
+.btn-regenerate,
+.btn-edit {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-generate:hover,
+.btn-regenerate:hover,
+.btn-edit:hover {
+  background-color: #229954;
+}
+
+.btn-generate:disabled,
+.btn-regenerate:disabled,
+.btn-edit:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.btn-generate {
+  width: 100%;
+}
+
+.no-plan {
+  background: white;
+  padding: 3rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.plan-display {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1.5rem 0;
+}
+
+.plan-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.plan-header h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.plan-focus {
+  color: #3498db;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+.plan-note {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+}
+
+.plan-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.plan-highlights h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.plan-highlights ul {
+  padding-left: 1.2rem;
+  color: #2c3e50;
+}
+
+.weekly-plan h3 {
+  color: #2c3e50;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.day-card {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.day-card h4 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.daily-goal {
+  color: #27ae60;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.reflection {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.completion-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #2c3e50;
+}
+
+.plan-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-regenerate,
+.btn-edit {
+  flex: 1;
+  padding: 0.75rem;
+}
+
+.btn-edit {
+  background-color: #3498db;
+}
+
+.btn-edit:hover {
+  background-color: #2980b9;
+}
+
+.plan-history {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.plan-history ul {
+  padding-left: 1.2rem;
+  color: #2c3e50;
+}

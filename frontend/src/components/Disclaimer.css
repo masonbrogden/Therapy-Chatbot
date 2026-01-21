@@ -1,0 +1,18 @@
+.disclaimer {
+  background-color: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.disclaimer-content h3 {
+  color: #856404;
+  margin-top: 0;
+}
+
+.disclaimer-content p {
+  color: #856404;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}

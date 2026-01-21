@@ -1,0 +1,69 @@
+.crisis-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44, 62, 80, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.crisis-modal {
+  background: #ffffff;
+  max-width: 520px;
+  width: 100%;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 32px rgba(44, 62, 80, 0.2);
+}
+
+.crisis-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.crisis-modal-header button {
+  background: transparent;
+  border: 1px solid #2c3e50;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+}
+
+.crisis-modal-disclaimer {
+  margin: 1rem 0;
+  color: #2c3e50;
+}
+
+.crisis-modal select {
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #d5dbe0;
+}
+
+.crisis-modal-state {
+  color: #5d6d7e;
+}
+
+.crisis-modal-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.crisis-modal-card {
+  border: 1px solid #e3e9ee;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.crisis-modal-card a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #2980b9;
+}

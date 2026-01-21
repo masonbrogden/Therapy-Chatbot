@@ -1,0 +1,137 @@
+.sessions-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.sessions-header h1 {
+  color: #2c3e50;
+}
+
+.sessions-search {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.sessions-search input {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #cbd6e2;
+}
+
+.sessions-search button {
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.sessions-state {
+  margin: 1rem 0;
+  color: #5d6d7e;
+}
+
+.sessions-state.error {
+  color: #c0392b;
+}
+
+.sessions-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1.5rem;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.session-card {
+  border: 1px solid #dce3ea;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.session-card.active {
+  border-color: #2980b9;
+  box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2);
+}
+
+.sessions-detail {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 20px rgba(44, 62, 80, 0.08);
+}
+
+.session-title-edit {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.session-title-edit input {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #d5dbe0;
+}
+
+.session-title-edit button {
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+
+.session-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.session-actions button {
+  background: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+}
+
+.session-transcript {
+  max-height: 360px;
+  overflow: auto;
+  border-top: 1px solid #ecf0f1;
+  padding-top: 1rem;
+}
+
+.transcript-item {
+  margin-bottom: 0.75rem;
+}
+
+.transcript-item.user strong {
+  color: #2980b9;
+}
+
+.transcript-item.assistant strong {
+  color: #27ae60;
+}
+
+@media (max-width: 900px) {
+  .sessions-grid {
+    grid-template-columns: 1fr;
+  }
+}

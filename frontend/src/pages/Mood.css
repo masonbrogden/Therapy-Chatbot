@@ -1,0 +1,281 @@
+.mood-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.mood-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1.5rem 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.mood-slider {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.mood-slider input {
+  flex: 1;
+  height: 8px;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.mood-value {
+  font-weight: bold;
+  color: #3498db;
+  min-width: 60px;
+}
+
+.mood-scale {
+  margin-top: 0.5rem;
+  color: #7f8c8d;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: #ecf0f1;
+  border: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #2c3e50;
+}
+
+.tag:hover {
+  border-color: #3498db;
+}
+
+.tag.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.form-group small {
+  display: block;
+  text-align: right;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+}
+
+.btn-submit {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: #229954;
+}
+
+.save-message {
+  margin-top: 0.75rem;
+  color: #27ae60;
+  text-align: center;
+}
+
+.mood-stats {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stat {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat strong {
+  display: block;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.stat p {
+  font-size: 1.8rem;
+  color: #3498db;
+  margin: 0.5rem 0 0 0;
+}
+
+.mood-history {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.range-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.range-selector button {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #bdc3c7;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.range-selector button.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.date-range {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.date-range label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.date-range input {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+}
+
+.clear-range {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #bdc3c7;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-delete-mood {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.btn-delete-mood:hover {
+  background-color: #c0392b;
+}
+
+.tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.tag-filter-label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.mood-error {
+  color: #c0392b;
+}
+
+.mood-timeline {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.timeline-entry {
+  border: 1px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fdfefe;
+}
+
+.timeline-date {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.timeline-score {
+  margin-top: 0.25rem;
+  color: #3498db;
+}
+
+.timeline-tags {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.timeline-tag {
+  background: #ecf0f1;
+  border-radius: 12px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.85rem;
+  color: #2c3e50;
+}
+
+.timeline-note {
+  margin-top: 0.5rem;
+  color: #2c3e50;
+}

@@ -1,0 +1,99 @@
+.privacy-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.data-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1.5rem 0;
+}
+
+.data-section.danger {
+  background-color: #fff5f5;
+  border-left: 4px solid #e74c3c;
+}
+
+.data-section h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.data-section ul {
+  color: #555;
+  line-height: 1.8;
+}
+
+.success-banner {
+  background: #d4edda;
+  border: 1px solid #28a745;
+  color: #155724;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.warning-text {
+  background: #fff3cd;
+  padding: 0.75rem;
+  border-radius: 4px;
+  color: #856404;
+  margin: 1rem 0;
+}
+
+.btn-export,
+.btn-delete {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.btn-export:hover {
+  background-color: #2980b9;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
+.btn-export:disabled,
+.btn-delete:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.privacy-policy {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 2rem 0;
+}
+
+.privacy-policy h3 {
+  color: #2c3e50;
+  margin-top: 1.5rem;
+}
+
+.privacy-policy p {
+  color: #555;
+  line-height: 1.7;
+}
+
+.privacy-policy ul {
+  color: #555;
+  line-height: 1.8;
+}
