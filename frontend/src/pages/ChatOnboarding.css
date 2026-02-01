@@ -1,0 +1,154 @@
+.onboarding-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.onboarding-card {
+  width: min(720px, 100%);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(12px);
+  display: grid;
+  gap: 1.5rem;
+}
+
+.onboarding-header h1 {
+  color: #f8fafc;
+  margin-bottom: 0.5rem;
+}
+
+.onboarding-header p {
+  color: rgba(203, 213, 255, 0.85);
+}
+
+.onboarding-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.onboarding-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.9), rgba(20, 184, 166, 0.9));
+}
+
+.onboarding-body {
+  min-height: 220px;
+}
+
+.onboarding-step {
+  display: grid;
+  gap: 1rem;
+}
+
+.step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.step-header span {
+  color: rgba(203, 213, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+.step-options {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.option-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  color: #e2e8f0;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.option-btn.active {
+  border-color: rgba(99, 102, 241, 0.6);
+  transform: translateY(-1px);
+}
+
+.step-inputs {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.step-inputs input {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.7);
+  color: #e2e8f0;
+}
+
+.ghost-btn {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: rgba(203, 213, 255, 0.85);
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.onboarding-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.onboarding-error {
+  color: #f87171;
+}
+
+@media (max-width: 768px) {
+  .onboarding-card {
+    padding: 1.75rem;
+  }
+
+  .step-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .onboarding-actions {
+    flex-direction: column;
+  }
+}

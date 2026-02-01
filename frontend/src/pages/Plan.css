@@ -1,15 +1,18 @@
 .plan-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem 1.5rem 3rem;
+  color: #e2e8f0;
 }
 
 .plan-form {
-  background: white;
+  background: var(--glass-bg);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
   margin: 1.5rem 0;
+  backdrop-filter: blur(12px);
 }
 
 .form-group {
@@ -20,7 +23,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: #f8fafc;
 }
 
 .form-group select,
@@ -28,10 +31,12 @@
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #bdc3c7;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
   font-family: inherit;
   font-size: 1rem;
+  background: rgba(15, 23, 42, 0.7);
+  color: #e2e8f0;
 }
 
 .focus-tags {
@@ -41,32 +46,32 @@
 }
 
 .tag {
-  background-color: #ecf0f1;
+  background-color: rgba(255, 255, 255, 0.08);
   border: 2px solid transparent;
   padding: 0.4rem 0.9rem;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s;
-  color: #2c3e50;
+  color: #e2e8f0;
 }
 
 .tag:hover {
-  border-color: #3498db;
+  border-color: rgba(99, 102, 241, 0.6);
 }
 
 .tag.active {
-  background-color: #3498db;
+  background-color: var(--color-primary);
   color: white;
-  border-color: #3498db;
+  border-color: rgba(99, 102, 241, 0.6);
 }
 
 .plan-error {
-  color: #c0392b;
+  color: #f87171;
 }
 
 .form-group small {
   display: block;
-  color: #7f8c8d;
+  color: rgba(203, 213, 255, 0.7);
   margin-top: 0.25rem;
   font-size: 0.85rem;
 }
@@ -74,11 +79,11 @@
 .btn-generate,
 .btn-regenerate,
 .btn-edit {
-  background-color: #27ae60;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
-  border-radius: 4px;
+  border-radius: 999px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -86,13 +91,13 @@
 .btn-generate:hover,
 .btn-regenerate:hover,
 .btn-edit:hover {
-  background-color: #229954;
+  background-color: #4f46e5;
 }
 
 .btn-generate:disabled,
 .btn-regenerate:disabled,
 .btn-edit:disabled {
-  background-color: #95a5a6;
+  background-color: rgba(148, 163, 184, 0.6);
   cursor: not-allowed;
 }
 
@@ -101,40 +106,44 @@
 }
 
 .no-plan {
-  background: white;
+  background: var(--glass-bg);
   padding: 3rem;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
 }
 
 .plan-display {
-  background: white;
+  background: var(--glass-bg);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
   margin: 1.5rem 0;
+  backdrop-filter: blur(12px);
 }
 
 .plan-header {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 2px solid #ecf0f1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .plan-header h2 {
   margin-top: 0;
-  color: #2c3e50;
+  color: #f8fafc;
 }
 
 .plan-focus {
-  color: #3498db;
+  color: #93c5fd;
   font-weight: bold;
   font-size: 1.05rem;
 }
 
 .plan-note {
-  color: #7f8c8d;
+  color: rgba(203, 213, 255, 0.7);
   font-size: 0.95rem;
   margin-top: 1rem;
 }
@@ -148,16 +157,16 @@
 
 .plan-highlights h3 {
   margin-top: 0;
-  color: #2c3e50;
+  color: #f8fafc;
 }
 
 .plan-highlights ul {
   padding-left: 1.2rem;
-  color: #2c3e50;
+  color: rgba(203, 213, 255, 0.85);
 }
 
 .weekly-plan h3 {
-  color: #2c3e50;
+  color: #f8fafc;
 }
 
 .days-grid {
@@ -168,25 +177,25 @@
 }
 
 .day-card {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.08);
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid rgba(99, 102, 241, 0.6);
 }
 
 .day-card h4 {
   margin-top: 0;
-  color: #2c3e50;
+  color: #f8fafc;
 }
 
 .daily-goal {
-  color: #27ae60;
+  color: #6ee7b7;
   font-weight: bold;
   margin: 0.5rem 0;
 }
 
 .reflection {
-  color: #7f8c8d;
+  color: rgba(203, 213, 255, 0.7);
   font-size: 0.9rem;
   margin: 0.5rem 0;
 }
@@ -197,7 +206,7 @@
   gap: 0.4rem;
   margin-top: 0.5rem;
   font-size: 0.85rem;
-  color: #2c3e50;
+  color: rgba(203, 213, 255, 0.85);
 }
 
 .plan-actions {
@@ -213,22 +222,24 @@
 }
 
 .btn-edit {
-  background-color: #3498db;
+  background-color: var(--color-primary);
 }
 
 .btn-edit:hover {
-  background-color: #2980b9;
+  background-color: #4f46e5;
 }
 
 .plan-history {
-  background: white;
+  background: var(--glass-bg);
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
   margin-bottom: 2rem;
+  backdrop-filter: blur(12px);
 }
 
 .plan-history ul {
   padding-left: 1.2rem;
-  color: #2c3e50;
+  color: rgba(203, 213, 255, 0.85);
 }

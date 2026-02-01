@@ -44,6 +44,11 @@ const SUPPORT_TOPICS = [
     href: '/#topics',
   },
   {
+    title: 'Work-Life Balance',
+    copy: 'Burnout signals, pacing, and reset plans.',
+    href: '/#topics',
+  },
+  {
     title: 'Relationships',
     copy: 'Perspective-taking, boundaries, and repair scripts.',
     href: '/#topics',
@@ -51,11 +56,6 @@ const SUPPORT_TOPICS = [
   {
     title: 'Trauma',
     copy: 'Safety-first reflections and steadying rituals.',
-    href: '/#topics',
-  },
-  {
-    title: 'Work-Life Balance',
-    copy: 'Burnout signals, pacing, and reset plans.',
     href: '/#topics',
   },
   {
@@ -114,10 +114,31 @@ const FAQS = [
   },
 ];
 
+const PRIVACY_FAQS = [
+  {
+    question: 'What does EchoMind remember about me?',
+    answer:
+      'We focus on what is needed to guide the conversation and avoid collecting unnecessary personal details.',
+  },
+  {
+    question: 'Are my chats shared with anyone?',
+    answer:
+      'No. Conversations stay private and are not shared or sold.',
+  },
+  {
+    question: 'Can I delete my data?',
+    answer:
+      'Yes. You can request data removal at any time.',
+  },
+];
+
+
+
 export default function Home() {
   const { language, changeLanguage } = useLanguage();
   const location = useLocation();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [privacyIndex, setPrivacyIndex] = useState(0);
   const videoRef = useRef(null);
 
   const currentLanguage = useMemo(
@@ -165,6 +186,7 @@ export default function Home() {
       video.removeEventListener('canplay', tryPlay);
     };
   }, []);
+
 
   return (
     <div className="home-page">
@@ -220,6 +242,7 @@ export default function Home() {
         </div>
       </section>
 
+
       <section id="how-it-works" className="home-section">
         <div className="section-header">
           <h2>How it works</h2>
@@ -244,19 +267,35 @@ export default function Home() {
         </div>
       </section>
 
+
       <section id="topics" className="home-section alt">
         <div className="section-header">
           <h2>Core support areas</h2>
           <p>Choose a focus and get a tailored path forward.</p>
         </div>
-        <div className="card-grid three">
-          {SUPPORT_TOPICS.map((topic) => (
-            <Link key={topic.title} to={topic.href} className="info-card link-card">
-              <h3>{topic.title}</h3>
-              <p>{topic.copy}</p>
-              <span className="card-link">Explore Topics</span>
-            </Link>
-          ))}
+        <div className="support-areas-body">
+          <div className="support-video-card">
+            <video
+              className="support-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+            >
+              <source src="/depressed.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div className="card-grid three support-grid">
+            {SUPPORT_TOPICS.map((topic) => (
+              <Link key={topic.title} to={topic.href} className="info-card link-card">
+                <h3>{topic.title}</h3>
+                <p>{topic.copy}</p>
+                <span className="card-link">Explore Topics</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -276,21 +315,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-section glow">
+
+      <section className="home-section alt privacy">
         <div className="section-header">
-          <h2>Privacy & safety promise</h2>
-          <p>Supportive guidance with clear boundaries.</p>
+          <h2>How privacy works</h2>
+          <p>Clear, transparent answers before you begin.</p>
         </div>
-        <div className="pill-grid">
-          <div className="pill-item">Not a replacement for emergency services</div>
-          <div className="pill-item">Crisis support is always available</div>
-          <div className="pill-item">Privacy-first data handling</div>
-          <div className="pill-item">Safety-first responses and referrals</div>
+        <div className="privacy-accordion">
+          {PRIVACY_FAQS.map((item, index) => {
+            const isOpen = privacyIndex === index;
+            return (
+              <div key={item.question} className={`privacy-item ${isOpen ? 'open' : ''}`}>
+                <button
+                  type="button"
+                  className="privacy-toggle"
+                  onClick={() => setPrivacyIndex(isOpen ? -1 : index)}
+                  aria-expanded={isOpen}
+                >
+                  <span>{item.question}</span>
+                  <span className="privacy-icon" aria-hidden="true">
+                    {isOpen ? '-' : '+'}
+                  </span>
+                </button>
+                {isOpen && <p className="privacy-answer">{item.answer}</p>}
+              </div>
+            );
+          })}
         </div>
-        <p className="fine-print">
-          EchoMind provides supportive, informational guidance and is not a substitute
-          for professional medical or mental health care.
-        </p>
       </section>
 
       <section id="enterprise" className="home-section alt">

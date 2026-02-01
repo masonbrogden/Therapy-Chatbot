@@ -1,7 +1,11 @@
 import axios from 'axios';
-import { auth } from '../firebase';
+import { supabase } from '../lib/supabaseClient';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:9090/api';
+const RAW_API_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  'http://127.0.0.1:8000/api';
+const API_BASE_URL = RAW_API_URL.endsWith('/api') ? RAW_API_URL : `${RAW_API_URL}/api`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,12 +15,25 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  if (auth && auth.currentUser) {
-    const token = await auth.currentUser.getIdToken();
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      console.error('API error:', error.response.status, error.response.data);
+    } else {
+      console.error('Network error:', error.message, 'baseURL:', API_BASE_URL);
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Health check
 export const healthCheck = async () => {
@@ -55,12 +72,12 @@ export const renameChatSession = (chatSessionId, title) =>
 export const exportChatSession = (chatSessionId, format = 'json') =>
   api.get(`/chat/session/${chatSessionId}/export`, { params: { format } });
 
-export const sendChatMessage = (sessionId, chatSessionId, content, language = 'en') =>
+export const sendChatMessage = (sessionId, chatSessionId, message, language = 'en') =>
   api.post('/chat/message', {
     session_id: sessionId,
     chat_session_id: chatSessionId,
     role: 'user',
-    content,
+    message,
     language,
   });
 
@@ -69,6 +86,12 @@ export const deleteChatSession = (chatSessionId, sessionId) =>
 
 export const deleteAllChatSessions = (sessionId) =>
   api.delete('/chat/sessions', { params: { session_id: sessionId } });
+
+// Chat Profile
+export const getChatProfile = () => api.get('/chat-profile');
+
+export const updateChatProfile = (profileData) =>
+  api.put('/chat-profile', profileData);
 
 // Mood
 export const createMoodEntry = (sessionId, moodScore, tags = [], note = '') =>
@@ -131,6 +154,20 @@ export const getGuidedExerciseStep = (slug, stepIndex, mode = 'scripted') =>
     step_index: stepIndex,
     mode,
   });
+
+// Journal
+export const createJournalEntry = (payload) => api.post('/journal/entries', payload);
+
+export const getJournalEntries = (params = {}) =>
+  api.get('/journal/entries', { params });
+
+export const getJournalEntry = (entryId) => api.get(`/journal/entries/${entryId}`);
+
+export const updateJournalEntry = (entryId, payload) =>
+  api.put(`/journal/entries/${entryId}`, payload);
+
+export const deleteJournalEntry = (entryId) =>
+  api.delete(`/journal/entries/${entryId}`);
 
 // Contact
 export const submitContact = (sessionId, contactData) =>

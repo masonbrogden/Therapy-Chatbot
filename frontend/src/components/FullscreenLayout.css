@@ -1,0 +1,13 @@
+.fullscreen-layout {
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .fullscreen-layout {
+    padding: 1.5rem 1rem;
+  }
+}

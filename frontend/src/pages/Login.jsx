@@ -1,56 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { RecaptchaVerifier } from 'firebase/auth';
+import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { auth } from '../firebase';
 import './Login.css';
 
 export default function Login() {
-  const {
-    user,
-    loading,
-    signIn,
-    signInWithGoogle,
-    signInWithPhone,
-    signUp,
-    signOutUser,
-  } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const { user, loading, signIn, signInWithGooglePopup, authError } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [phoneData, setPhoneData] = useState({ phone: '', code: '' });
-  const [confirmation, setConfirmation] = useState(null);
   const [status, setStatus] = useState({ error: '', busy: false });
-  const recaptchaRef = useRef(null);
-
-  useEffect(() => {
-    if (loading || user || !auth || recaptchaRef.current) {
-      return undefined;
-    }
-    recaptchaRef.current = new RecaptchaVerifier(auth, 'phone-recaptcha', {
-      size: 'normal',
-    });
-    recaptchaRef.current.render().catch(() => {});
-    return () => {
-      if (recaptchaRef.current) {
-        recaptchaRef.current.clear();
-        recaptchaRef.current = null;
-      }
-    };
-  }, [loading, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleAuth = async () => {
+    if (!formData.email.trim() || !formData.password) {
+      setStatus({ error: 'Email and password are required.', busy: false });
+      return;
+    }
     setStatus({ error: '', busy: true });
     try {
-      if (isSignUp) {
-        await signUp(formData.email, formData.password);
-      } else {
-        await signIn(formData.email, formData.password);
-      }
+      const { error } = await signIn(formData.email, formData.password);
+      if (error) throw error;
     } catch (err) {
       setStatus({ error: err.message || 'Authentication failed.', busy: false });
       return;
@@ -61,45 +33,9 @@ export default function Login() {
   const handleGoogleSignIn = async () => {
     setStatus({ error: '', busy: true });
     try {
-      await signInWithGoogle();
+      await signInWithGooglePopup();
     } catch (err) {
       setStatus({ error: err.message || 'Google sign-in failed.', busy: false });
-      return;
-    }
-    setStatus({ error: '', busy: false });
-  };
-
-  const handlePhoneChange = (e) => {
-    const { name, value } = e.target;
-    setPhoneData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSendCode = async () => {
-    setStatus({ error: '', busy: true });
-    try {
-      if (!recaptchaRef.current) {
-        throw new Error('reCAPTCHA not ready. Please try again.');
-      }
-      const result = await signInWithPhone(phoneData.phone, recaptchaRef.current);
-      setConfirmation(result);
-    } catch (err) {
-      setStatus({ error: err.message || 'Phone sign-in failed.', busy: false });
-      return;
-    }
-    setStatus({ error: '', busy: false });
-  };
-
-  const handleVerifyCode = async () => {
-    setStatus({ error: '', busy: true });
-    try {
-      if (!confirmation) {
-        throw new Error('Please request a verification code first.');
-      }
-      await confirmation.confirm(phoneData.code);
-      setConfirmation(null);
-      setPhoneData({ phone: '', code: '' });
-    } catch (err) {
-      setStatus({ error: err.message || 'Code verification failed.', busy: false });
       return;
     }
     setStatus({ error: '', busy: false });
@@ -114,27 +50,15 @@ export default function Login() {
   }
 
   if (user) {
-    return (
-      <div className="login-container">
-        <h1>Account</h1>
-        <p className="login-subtitle">Signed in as {user.email || 'User'}.</p>
-        <button className="login-button" onClick={signOutUser}>
-          Sign Out
-        </button>
-      </div>
-    );
+    return <Navigate to="/chat" replace />;
   }
 
   return (
     <div className="login-container">
-      <h1>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
-      <p className="login-subtitle">
-        {isSignUp
-          ? 'Create an account to keep your session across devices.'
-          : 'Sign in to continue your journey.'}
-      </p>
+      <h1>Welcome back</h1>
+      <p className="login-subtitle">Sign in or create a new account to continue.</p>
 
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={(e) => e.preventDefault()}>
         <label htmlFor="email">Email</label>
         <input
           id="email"
@@ -155,15 +79,32 @@ export default function Login() {
           value={formData.password}
           onChange={handleChange}
           placeholder="Password"
-          autoComplete={isSignUp ? 'new-password' : 'current-password'}
+          autoComplete="current-password"
           required
         />
 
-        {status.error ? <div className="login-error">{status.error}</div> : null}
+        {status.error || authError ? (
+          <div className="login-error">{status.error || authError}</div>
+        ) : null}
 
-        <button className="login-button" type="submit" disabled={status.busy}>
-          {status.busy ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
-        </button>
+        <div className="login-actions">
+          <button
+            className="login-button"
+            type="button"
+            onClick={handleAuth}
+            disabled={status.busy}
+          >
+            {status.busy ? 'Please wait...' : 'Sign In'}
+          </button>
+          <button
+            className="login-button"
+            type="button"
+            onClick={() => navigate('/signup')}
+            disabled={status.busy}
+          >
+            Sign Up
+          </button>
+        </div>
       </form>
 
       <div className="login-divider">or</div>
@@ -175,63 +116,6 @@ export default function Login() {
         disabled={status.busy}
       >
         Continue with Google
-      </button>
-
-      <div className="login-divider">or</div>
-
-      <div className="login-phone">
-        <label htmlFor="phone">Phone number</label>
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          value={phoneData.phone}
-          onChange={handlePhoneChange}
-          placeholder="+1 555 123 4567"
-          autoComplete="tel"
-          required
-        />
-        <div className="login-phone-actions">
-          <button
-            className="login-button"
-            type="button"
-            onClick={handleSendCode}
-            disabled={status.busy || !phoneData.phone}
-          >
-            Send code
-          </button>
-        </div>
-        <div id="phone-recaptcha" className="recaptcha-container" />
-        {confirmation ? (
-          <>
-            <label htmlFor="code">Verification code</label>
-            <input
-              id="code"
-              name="code"
-              type="text"
-              value={phoneData.code}
-              onChange={handlePhoneChange}
-              placeholder="123456"
-              autoComplete="one-time-code"
-            />
-            <button
-              className="login-button"
-              type="button"
-              onClick={handleVerifyCode}
-              disabled={status.busy || !phoneData.code}
-            >
-              Verify code
-            </button>
-          </>
-        ) : null}
-      </div>
-
-      <button
-        className="login-link"
-        type="button"
-        onClick={() => setIsSignUp((prev) => !prev)}
-      >
-        {isSignUp ? 'Already have an account? Sign in' : 'New here? Create an account'}
       </button>
     </div>
   );

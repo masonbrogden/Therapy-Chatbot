@@ -1,39 +1,52 @@
 .exercise-card {
-  background: white;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.25);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
 }
 
 .exercise-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.35);
 }
 
 .exercise-card h3 {
   margin-top: 0;
-  color: #2c3e50;
+  color: #f8fafc;
   min-height: 2.6rem;
 }
 
 .exercise-category {
   display: inline-block;
-  background-color: #ecf0f1;
+  background-color: rgba(99, 102, 241, 0.2);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
-  color: #7f8c8d;
+  color: #c7d2fe;
   margin: 0.5rem 0;
   min-height: 1.6rem;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.exercise-category::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.9);
 }
 
 .exercise-description {
-  color: #555;
+  color: rgba(203, 213, 255, 0.85);
   line-height: 1.5;
   margin: 1rem 0;
   flex-grow: 1;
@@ -45,25 +58,26 @@
 }
 
 .exercise-duration {
-  color: #3498db;
+  color: #a5b4fc;
   font-size: 0.9rem;
   margin: 0.5rem 0;
   min-height: 1.4rem;
 }
 
 .btn-start {
-  background-color: #27ae60;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.3s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
   margin-top: auto;
 }
 
 .btn-start:hover {
-  background-color: #229954;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(79, 70, 229, 0.35);
 }

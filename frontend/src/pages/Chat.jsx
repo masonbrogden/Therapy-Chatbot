@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Disclaimer from '../components/Disclaimer';
 import CrisisBanner from '../components/CrisisBanner';
 import LoadingSpinner from '../components/LoadingSpinner';
 import * as api from '../services/api';
 import { getSessionId } from '../utils/session';
 import { useLanguage } from '../context/LanguageContext';
+import { getCachedChatProfile, normalizeChatProfile, setCachedChatProfile } from '../utils/chatProfile';
 import './Chat.css';
 
-export default function Chat() {
+export default function Chat({ chatProfile: initialProfile = null }) {
   const { language } = useLanguage();
   const sessionId = getSessionId();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [chatSessions, setChatSessions] = useState([]);
   const [currentSession, setCurrentSession] = useState(null);
@@ -20,11 +22,30 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [crisisMode, setCrisisMode] = useState(false);
   const [error, setError] = useState('');
+  const [chatProfile, setChatProfile] = useState(initialProfile);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
     loadSessions();
+  }, []);
+
+  useEffect(() => {
+    const cached = getCachedChatProfile();
+    if (cached && !chatProfile) {
+      setChatProfile(cached);
+    }
+    const loadProfile = async () => {
+      try {
+        const response = await api.getChatProfile();
+        const profile = normalizeChatProfile(response.data || {});
+        setCachedChatProfile(profile);
+        setChatProfile(profile);
+      } catch (err) {
+        // Ignore profile errors in chat view.
+      }
+    };
+    loadProfile();
   }, []);
 
   useEffect(() => {
@@ -143,6 +164,12 @@ export default function Chat() {
 
       <div className="chat-layout">
         <aside className="chat-sidebar">
+          <button
+            onClick={() => navigate('/chat/onboarding')}
+            className="btn-preferences"
+          >
+            Edit Chat Preferences
+          </button>
           <button onClick={createNewSession} className="btn-new-chat">+ New Chat</button>
 
           <div className="sessions-list">
@@ -187,7 +214,12 @@ export default function Chat() {
             {error && <div className="chat-error">{error}</div>}
             {messages.length === 0 ? (
               <div className="empty-state">
-                <h2>Welcome to EchoMind</h2>
+                <img className="empty-logo" src="/logo.png" alt="EchoMind logo" />
+                <h2>
+                  {chatProfile?.displayName
+                    ? `Hey ${chatProfile.displayName}, what can I help you with today?`
+                    : 'Hey, what can I help you with today?'}
+                </h2>
                 <p>Start a conversation. I'm here to listen and support you.</p>
               </div>
             ) : (

@@ -31,6 +31,34 @@ class User(db.Model):
         }
 
 
+class ChatProfile(db.Model):
+    """User chat onboarding preferences."""
+    __tablename__ = "chat_profile"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), unique=True, index=True)
+    display_name = db.Column(db.String(255))
+    tone = db.Column(db.String(50))
+    goal = db.Column(db.String(255))
+    focus_area = db.Column(db.String(255))
+    response_length = db.Column(db.String(50))
+    boundaries = db.Column(db.Text)
+    onboarding_completed = db.Column(db.Boolean, default=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "display_name": self.display_name,
+            "tone": self.tone,
+            "goal": self.goal,
+            "focus_area": self.focus_area,
+            "response_length": self.response_length,
+            "boundaries": self.boundaries,
+            "onboarding_completed": bool(self.onboarding_completed),
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
 class MoodEntry(db.Model):
     """User mood check-in tracker."""
     __tablename__ = "mood_entries"
@@ -207,4 +235,31 @@ class ExerciseCompletion(db.Model):
             if self.completion_date
             else None,
             "completed_at": self.completed_at.isoformat(),
+        }
+
+
+class JournalEntry(db.Model):
+    """Private journal entries per user."""
+    __tablename__ = "journal_entries"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), index=True, nullable=False)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text, nullable=False)
+    mood = db.Column(db.String(50))
+    triggers_json = db.Column(db.Text, default="[]")
+    prompt_used = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "content": self.content,
+            "mood": self.mood,
+            "triggers": json.loads(self.triggers_json or "[]"),
+            "prompt_used": self.prompt_used,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

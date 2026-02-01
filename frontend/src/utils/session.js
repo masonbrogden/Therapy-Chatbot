@@ -1,5 +1,5 @@
 /**
- * Session utility: get or create anonymous session_id in localStorage
+ * Session utility: get or create a client session_id in localStorage
  */
 
 const SESSION_KEY = 'therapy_chatbot_session_id';

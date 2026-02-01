@@ -1,0 +1,54 @@
+.section-intro {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(12px);
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.section-intro h1 {
+  color: #f8fafc;
+  font-size: clamp(2rem, 3.5vw, 2.6rem);
+}
+
+.section-intro-pill {
+  align-self: flex-start;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.section-intro-subheading {
+  color: rgba(203, 213, 255, 0.85);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.section-intro-supporting {
+  color: rgba(203, 213, 255, 0.75);
+  line-height: 1.65;
+}
+
+.section-intro.center-pill .section-intro-pill {
+  align-self: center;
+}
+
+.section-intro.center-card {
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .section-intro {
+    padding: 1.5rem;
+  }
+}
