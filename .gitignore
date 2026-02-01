@@ -201,6 +201,10 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+# Allow frontend library code
+!frontend/src/lib/
+!frontend/src/lib/**
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
