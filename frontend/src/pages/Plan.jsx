@@ -93,13 +93,21 @@ export default function Plan() {
     e.preventDefault();
     try {
       setLoading(true);
+      setError('');
       await api.upsertTherapyProfile(sessionId, formData);
       setProfile(formData);
       setEditMode(false);
-      await loadPlan();
+      try {
+        const response = await api.generateTherapyPlan(sessionId);
+        setPlan(response.data);
+      } catch (planError) {
+        console.error('Failed to generate plan after profile save:', planError);
+        await loadPlan();
+      }
       await loadPlanHistory();
     } catch (err) {
       console.error('Failed to save profile:', err);
+      setError('Unable to save your plan details. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -136,6 +144,7 @@ export default function Plan() {
         <Disclaimer />
         <h1>Build Your Therapy Plan</h1>
         <p>Tell us about your goals and preferences so we can create a personalized plan.</p>
+        {error && <p className="plan-error">{error}</p>}
 
         <form onSubmit={saveProfile} className="plan-form">
           <div className="form-group">

@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 export default function Navbar() {
   const { language, changeLanguage } = useLanguage();
-  const { user, signOutUser } = useAuth();
+  const { user, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
   const languageOptions = [
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Espanol' },
@@ -72,6 +73,11 @@ export default function Navbar() {
   const getDropdownClass = ({ isActive }) =>
     isActive ? 'dropdown-link active' : 'dropdown-link';
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -87,6 +93,16 @@ export default function Navbar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/journal" className={getLinkClass}>
+                Journal
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/wellness-assessment" className={getLinkClass}>
+                Wellness Assessment
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/crisis" className={getLinkClass}>
                 Crisis Support
               </NavLink>
@@ -98,7 +114,7 @@ export default function Navbar() {
           {user ? (
             <div className="navbar-auth">
               <span className="navbar-user">{user.email || 'Signed in'}</span>
-              <button type="button" className="navbar-auth-btn" onClick={signOutUser}>
+              <button type="button" className="navbar-auth-btn" onClick={handleSignOut}>
                 Sign Out
               </button>
             </div>

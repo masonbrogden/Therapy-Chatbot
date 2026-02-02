@@ -1,5 +1,6 @@
 """Therapy Chatbot Flask Backend."""
 from flask import Flask, render_template, jsonify, request
+from sqlalchemy import text
 from flask_cors import CORS
 from dotenv import load_dotenv
 from db import init_db, db
@@ -16,41 +17,82 @@ from routes.exercises import exercises_bp
 from routes.contact import contact_bp
 from routes.data import data_bp
 from routes.user import user_bp
+from routes.journal import journal_bp
+from routes.chat_profile import chat_profile_bp
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Load environment variables
+# Load environment variables from root-level .env
 load_dotenv()
 
+# LLM initialization state
+chat_model = None
+rag_chain = None
+if not os.getenv("OPENAI_API_KEY"):
+    print("WARNING: OPENAI_API_KEY is not set. Chat will use fallback responses.")
+
 # Configure SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL',
-    'sqlite:///instance/therapy_chatbot.db'
+# Configure SQLAlchemy
+database_url = os.getenv("DATABASE_URL")
+
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    database_url or "sqlite:///instance/therapy_chatbot.db"
 )
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 # Initialize database
 init_db(app)
+import models
+with app.app_context():
+    db.create_all()
 
 # Enable CORS
+frontend_origins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:3000',
+]
+extra_origins = [
+    origin.strip()
+    for origin in os.getenv('FRONTEND_ORIGINS', '').split(',')
+    if origin.strip()
+]
+frontend_origins.extend(extra_origins)
+
 CORS(
     app,
-    origins=[
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://127.0.0.1:3000',
-    ],
-    allow_headers=['Content-Type', 'Authorization'],
+    resources={
+        r"/api/*": {
+            "origins": frontend_origins,
+            "allow_headers": ['Content-Type', 'Authorization'],
+            "methods": ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        }
+    },
 )
 
 # Legacy RAG chain setup (optional, if Pinecone is available)
-rag_chain = None
 try:
     RAG_ENABLED = os.environ.get("RAG_ENABLED", "false").lower() in ("1", "true", "yes")
     PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+    if OPENAI_API_KEY:
+        try:
+            from langchain_openai import ChatOpenAI
+
+            chat_model = ChatOpenAI(model="gpt-4o")
+        except Exception as exc:
+            print(f"LLM init failed: {exc}")
+            chat_model = None
+    else:
+        print("WARNING: OPENAI_API_KEY is not set. LLM will not initialize.")
 
     if not RAG_ENABLED:
         print("RAG disabled (set RAG_ENABLED=true to enable).")
@@ -82,11 +124,19 @@ try:
             rag_chain = create_retrieval_chain(retriever, question_answer_chain)
             print("RAG chain initialized with Pinecone")
         except Exception as e:
-            print(f"RAG chain setup failed: {e}. Chat will use fallback responses.")
+            print(f"RAG chain setup failed: {e}.")
     else:
-        print("RAG keys missing. Chat will use fallback responses.")
+        if RAG_ENABLED:
+            print("RAG keys missing. RAG chain will not initialize.")
 except ImportError:
-    print("RAG dependencies not available. Chat will use fallback responses.")
+    print("RAG dependencies not available. Chat will use direct LLM if configured.")
+
+if rag_chain:
+    print("LLM ready: RAG chain enabled.")
+elif chat_model:
+    print("LLM ready: Direct chat model enabled.")
+else:
+    print("LLM not initialized.")
 
 
 # Register route blueprints
@@ -99,14 +149,17 @@ app.register_blueprint(exercises_bp)
 app.register_blueprint(contact_bp)
 app.register_blueprint(data_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(journal_bp)
+app.register_blueprint(chat_profile_bp)
 
 
 # Health endpoint
 @app.route('/api/health', methods=['GET'])
+@app.route('/api/health/', methods=['GET'])
 def health():
     """Health check endpoint."""
     try:
-        db.session.execute('SELECT 1')
+        db.session.execute(text('SELECT 1'))
         db_status = 'connected'
     except Exception as e:
         db_status = f'error: {str(e)}'
@@ -145,4 +198,4 @@ def legacy_chat():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9090, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)

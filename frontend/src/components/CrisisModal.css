@@ -1,7 +1,7 @@
 .crisis-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(44, 62, 80, 0.65);
+  background: rgba(15, 23, 42, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,12 +10,15 @@
 }
 
 .crisis-modal {
-  background: #ffffff;
+  background: rgba(15, 23, 42, 0.9);
   max-width: 520px;
   width: 100%;
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 1.5rem;
-  box-shadow: 0 12px 32px rgba(44, 62, 80, 0.2);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e2e8f0;
+  backdrop-filter: blur(14px);
 }
 
 .crisis-modal-header {
@@ -25,8 +28,9 @@
 }
 
 .crisis-modal-header button {
-  background: transparent;
-  border: 1px solid #2c3e50;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e2e8f0;
   border-radius: 6px;
   padding: 0.4rem 0.75rem;
   cursor: pointer;
@@ -34,7 +38,7 @@
 
 .crisis-modal-disclaimer {
   margin: 1rem 0;
-  color: #2c3e50;
+  color: rgba(203, 213, 255, 0.85);
 }
 
 .crisis-modal select {
@@ -43,11 +47,13 @@
   margin-bottom: 1rem;
   padding: 0.6rem;
   border-radius: 6px;
-  border: 1px solid #d5dbe0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.7);
+  color: #e2e8f0;
 }
 
 .crisis-modal-state {
-  color: #5d6d7e;
+  color: rgba(203, 213, 255, 0.7);
 }
 
 .crisis-modal-list {
@@ -57,13 +63,15 @@
 }
 
 .crisis-modal-card {
-  border: 1px solid #e3e9ee;
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
   padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
 }
 
 .crisis-modal-card a {
   display: inline-block;
   margin-top: 0.5rem;
-  color: #2980b9;
+  color: #a5b4fc;
 }

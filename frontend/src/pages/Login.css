@@ -41,6 +41,13 @@
   border-radius: 6px;
 }
 
+.login-success {
+  background: #e9f7ef;
+  color: #1e8449;
+  padding: 0.75rem;
+  border-radius: 6px;
+}
+
 .login-button {
   margin-top: 0.5rem;
   padding: 0.75rem 1rem;
@@ -49,6 +56,12 @@
   background: #2c3e50;
   color: #ffffff;
   cursor: pointer;
+}
+
+.login-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
 }
 
 .login-button:disabled {

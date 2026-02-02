@@ -1,20 +1,25 @@
 """Chat routes."""
 import json
+import logging
+import os
 from datetime import datetime, timedelta
 
 from flask import Blueprint, request, jsonify, g
 from sqlalchemy import or_
 from db import db
-from models import ChatSession, ChatMessage
+from models import ChatSession, ChatMessage, ChatProfile
 from services.auth import require_auth, get_request_session_id
 from services.safety_filter import (
     check_safety,
     get_crisis_response,
     get_medium_support_response,
 )
+from src.prompt import system_prompt
+from langchain_core.messages import HumanMessage, SystemMessage
 
 chat_bp = Blueprint("chat", __name__, url_prefix="/api/chat")
 rate_limit_store = {}
+logger = logging.getLogger(__name__)
 
 
 def _check_rate_limit(user_id, max_per_minute=20):
@@ -33,6 +38,43 @@ def _check_rate_limit(user_id, max_per_minute=20):
 def _make_title_from_message(content):
     trimmed = (content or "").strip().replace("\n", " ")
     return trimmed[:60] if trimmed else "New Chat"
+
+
+def _build_profile_context(user_id):
+    profile = ChatProfile.query.filter_by(user_id=user_id).first()
+    if not profile or not profile.onboarding_completed:
+        return ""
+    display_name = profile.display_name or ""
+    tone = profile.tone or ""
+    goal = profile.goal or ""
+    focus_area = profile.focus_area or ""
+    response_length = profile.response_length or ""
+    boundaries = profile.boundaries or ""
+    return (
+        "User preferred tone: "
+        f"{tone}. Goal: {goal}. Focus: {focus_area}. "
+        f"Response length: {response_length}. "
+        f"Boundaries: {boundaries}. "
+        f"Address them as {display_name} if provided."
+    )
+
+
+def _fetch_recent_history(chat_session_id, limit=20):
+    messages = (
+        ChatMessage.query.filter_by(chat_session_id=chat_session_id)
+        .order_by(ChatMessage.created_at.desc())
+        .limit(limit)
+        .all()
+    )
+    return list(reversed(messages))
+
+
+def _format_history(messages):
+    lines = []
+    for msg in messages:
+        role = msg.role or "user"
+        lines.append(f"{role}: {msg.content}")
+    return "\n".join(lines)
 
 
 @chat_bp.route("/session", methods=["POST"])
@@ -159,11 +201,20 @@ def create_chat_message():
     """Save a user/assistant message and return bot response."""
     data = request.get_json() or {}
     chat_session_id = data.get("chat_session_id")
-    content = data.get("content")
+    message = data.get("message")
     language = data.get("language", g.current_user.preferred_language or "en")
 
-    if not all([chat_session_id, content]):
-        return jsonify({"error": "chat_session_id and content required"}), 400
+    logger.info(
+        "Chat message received: session_id=%s language=%s payload=%s",
+        chat_session_id,
+        language,
+        {key: data.get(key) for key in ("session_id", "chat_session_id", "message", "language")},
+    )
+
+    if not message:
+        return jsonify({"error": "Missing message"}), 400
+    if not chat_session_id:
+        return jsonify({"error": "chat_session_id required"}), 400
 
     if not _check_rate_limit(g.current_user.id):
         return jsonify({"error": "Rate limit exceeded. Slow down."}), 429
@@ -174,17 +225,20 @@ def create_chat_message():
     if not chat_session:
         return jsonify({"error": "Chat session not found"}), 404
 
-    safety_check = check_safety(content)
+    safety_check = check_safety(message)
     crisis_mode = safety_check["risk_level"] == "high"
 
     user_message = ChatMessage(
         chat_session_id=chat_session_id,
         role="user",
-        content=content,
+        content=message,
         language=language,
         safety_flags_json=json.dumps(safety_check.get("reasons", [])),
     )
     db.session.add(user_message)
+
+    used_fallback = False
+    fallback_reason = ""
 
     if crisis_mode:
         bot_response = get_crisis_response()
@@ -192,14 +246,70 @@ def create_chat_message():
         bot_response = get_medium_support_response()
     else:
         try:
-            from app import rag_chain
+            from app import rag_chain, chat_model
 
-            response = rag_chain.invoke({"input": f"[Language: {language}] {content}"})
-            bot_response = response.get(
-                "answer", "I understood your message. How can I help further?"
+            if not os.getenv("OPENAI_API_KEY"):
+                logger.error("OPENAI_API_KEY missing. Cannot call LLM.")
+                return (
+                    jsonify(
+                        {
+                            "error": "OPENAI_API_KEY missing",
+                            "used_fallback": True,
+                            "reason": "OPENAI_API_KEY missing",
+                        }
+                    ),
+                    500,
+                )
+
+            profile_context = _build_profile_context(g.current_user.id)
+            history = _fetch_recent_history(chat_session_id)
+            history_text = _format_history(history)
+            prompt_prefix = f"[Language: {language}]"
+            if profile_context:
+                prompt_prefix = f"{prompt_prefix} [Chat Profile: {profile_context}]"
+            prompt_body = (
+                f"{prompt_prefix}\n"
+                f"System: {system_prompt}\n"
+                f"Conversation history:\n{history_text}\n"
+                f"User: {message}\n"
+                "Assistant:"
             )
+            logger.info("LLM prompt: %s", prompt_body)
+
+            logger.info(
+                "LLM state: rag_chain=%s chat_model=%s",
+                bool(rag_chain),
+                bool(chat_model),
+            )
+
+            if rag_chain:
+                response = rag_chain.invoke({"input": prompt_body})
+                bot_response = response.get(
+                    "answer", "I understood your message. How can I help further?"
+                )
+            elif chat_model:
+                messages = [
+                    SystemMessage(content=system_prompt),
+                    HumanMessage(content=f"{history_text}\nUser: {message}"),
+                ]
+                logger.info("LLM messages: %s", [m.content for m in messages])
+                response = chat_model.invoke(messages)
+                bot_response = getattr(response, "content", None) or str(response)
+            else:
+                return (
+                    jsonify(
+                        {
+                            "error": "LLM not initialized",
+                            "used_fallback": True,
+                            "reason": "LLM not initialized",
+                        }
+                    ),
+                    500,
+                )
         except Exception as exc:
-            print(f"LLM error: {exc}")
+            logger.exception("LLM error, using fallback: %s", exc)
+            used_fallback = True
+            fallback_reason = str(exc)
             bot_response = (
                 "Thank you for sharing. I'm here to listen and support you. "
                 f"(Language: {language}) What aspect would you like to explore further?"
@@ -214,8 +324,8 @@ def create_chat_message():
     )
     db.session.add(bot_message)
 
-    if chat_session.title in ("Untitled Chat", "New Chat") and content:
-        chat_session.title = _make_title_from_message(content)
+    if chat_session.title in ("Untitled Chat", "New Chat") and message:
+        chat_session.title = _make_title_from_message(message)
 
     chat_session.last_message_at = datetime.utcnow()
     db.session.commit()
@@ -227,6 +337,8 @@ def create_chat_message():
                 "bot_response": bot_response,
                 "crisis_mode": crisis_mode,
                 "safety_check": safety_check,
+                "used_fallback": used_fallback,
+                "reason": fallback_reason if used_fallback else "",
             }
         ),
         201,

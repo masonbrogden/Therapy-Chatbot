@@ -26,7 +26,14 @@ Frontend (`frontend/.env.example`):
 - Mood entries: `POST /api/mood`, `GET /api/mood`
 - Therapy plans: `POST /api/plan/generate`, `GET /api/plan`, `PUT /api/plan/complete`
 - Exercises: `GET /api/exercises`, `POST /api/exercises/complete`
+- Journal: `POST/GET /api/journal/entries`, `GET/PUT/DELETE /api/journal/entries/:id`
 - Crisis resources: `GET /api/crisis-resources`
+
+### Journal Feature
+- Requires authentication; entries are scoped to the current user.
+- Uses SQLite by default. If the journal table is missing, delete `instance/therapy_chatbot.db`
+  and restart the backend to recreate tables.
+- The optional Journal Lock re-checks your password for email/password accounts.
 
 ### Safety Layer
 - All chat messages pass through a safety filter.

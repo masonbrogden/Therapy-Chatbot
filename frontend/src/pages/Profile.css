@@ -1,10 +1,13 @@
 .profile-container {
   max-width: 720px;
   margin: 0 auto;
-  background: #ffffff;
+  background: var(--glass-bg);
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 24px rgba(44, 62, 80, 0.1);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  color: #e2e8f0;
 }
 
 .profile-form {
@@ -18,23 +21,25 @@
 .profile-form select,
 .profile-form textarea {
   padding: 0.75rem;
-  border-radius: 6px;
-  border: 1px solid #d5dbe0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.7);
+  color: #e2e8f0;
 }
 
 .profile-form button {
-  background: #2c3e50;
+  background: var(--color-primary);
   color: #ffffff;
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
   padding: 0.75rem;
   cursor: pointer;
 }
 
 .profile-error {
-  color: #c0392b;
+  color: #f87171;
 }
 
 .profile-success {
-  color: #27ae60;
+  color: #6ee7b7;
 }

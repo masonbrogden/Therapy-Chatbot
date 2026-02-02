@@ -317,6 +317,7 @@ export default function Exercises() {
       loadProgress();
     } catch (error) {
       console.error('Failed to record completion:', error);
+      setError('Unable to mark this exercise complete. Please try again.');
     }
   };
 
@@ -329,6 +330,7 @@ export default function Exercises() {
         <button onClick={() => setSelectedExercise(null)} className="btn-back">
           Back to Exercises
         </button>
+        {error && <p className="exercise-error">{error}</p>}
 
         <div className="exercise-header">
           <h1>{selectedExercise.title}</h1>
@@ -343,12 +345,6 @@ export default function Exercises() {
               }}
             >
               Scripted
-            </button>
-            <button
-              className={mode === 'ai' ? 'active' : ''}
-              onClick={() => setMode('ai')}
-            >
-              AI Guided
             </button>
           </div>
         </div>
@@ -674,9 +670,15 @@ export default function Exercises() {
   const streak = (() => {
     if (!progress.length) return 0;
     const dates = progress
-      .map((item) => item.completion_date)
+      .map((item) => item.completion_date || item.completed_at || item.created_at)
       .filter(Boolean)
-      .map((value) => new Date(value));
+      .map((value) => {
+        if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+          const [year, month, day] = value.split('-').map(Number);
+          return new Date(year, month - 1, day);
+        }
+        return new Date(value);
+      });
     const dateSet = new Set(dates.map((d) => d.toDateString()));
     let count = 0;
     let current = new Date();
@@ -690,7 +692,11 @@ export default function Exercises() {
   return (
     <div className="exercises-container">
       <h1>Guided Exercises</h1>
-      <p>Choose an exercise to get started on your wellness journey.</p>
+      <p>
+        These guided exercises provide a safe space to reflect, reset, and build healthier
+        habits. By practicing small, intentional activities, you can develop stronger
+        emotional awareness, reduce anxiety, and create lasting positive change over time.
+      </p>
 
       <div className="exercise-progress-summary">
         <div>
@@ -702,6 +708,7 @@ export default function Exercises() {
           <span>{streak} days</span>
         </div>
       </div>
+      <p>Choose an exercise to get started on your wellness journey.</p>
 
       {loading ? (
         <LoadingSpinner />
