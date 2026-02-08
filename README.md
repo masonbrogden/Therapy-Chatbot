@@ -5,9 +5,12 @@
 ### Environment Variables
 
 Backend (`.env.example`):
-- `DATABASE_URL` - SQLAlchemy database URL.
-- `FIREBASE_ADMIN_JSON` - Firebase Admin service account JSON string.
+- `DATABASE_URL` - Postgres connection string in production (SQLite allowed only for local dev).
+- `SUPABASE_JWT_SECRET` - Supabase JWT secret (Project Settings → API).
+- `SUPABASE_JWT_ISSUER` - Optional issuer (e.g., `https://<project-ref>.supabase.co/auth/v1`).
+- `SUPABASE_JWT_AUDIENCE` - Optional audience (often `authenticated`).
 - `OPENAI_API_KEY`, `PINECONE_API_KEY` - Optional LLM/RAG providers.
+- `AUTH_BYPASS` - Set `true` only in local dev (blocked in production).
 
 Frontend (`frontend/.env.example`):
 - `VITE_API_URL` - Backend API base URL.
@@ -16,9 +19,14 @@ Frontend (`frontend/.env.example`):
 - `VITE_FIREBASE_APP_ID`, `VITE_FIREBASE_MEASUREMENT_ID`
 
 ### Database Setup
-- This project uses SQLite by default. If you change models, delete `instance/therapy_chatbot.db`
+- Local dev uses SQLite by default. If you change models, delete `instance/therapy_chatbot.db`
   and restart the Flask app to recreate tables.
-- Or run `python scripts/reset_db.py` to back up and recreate the local DB.
+- Production requires Postgres via `DATABASE_URL`.
+
+### Auth Sanity Checks (manual)
+- Valid Supabase JWT → should return `200` on protected endpoints.
+- Missing/invalid token → should return `401 {"error": "Unauthorized"}`.
+- `AUTH_BYPASS=true` allowed only in dev; app refuses to start in production.
 
 ### Key Endpoints
 - Authenticated user profile: `GET/PUT /api/user/profile`
@@ -38,3 +46,29 @@ Frontend (`frontend/.env.example`):
 ### Safety Layer
 - All chat messages pass through a safety filter.
 - High-risk content triggers crisis-safe responses and surfaces help resources.
+
+## Production on VM (Oracle Linux/Ubuntu)
+1. Install dependencies:
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y python3-venv python3-pip
+   python3 -m venv venv
+   . venv/bin/activate
+   pip install -r requirements.txt
+   ```
+2. Set environment variables:
+   - `ENV=production`
+   - `DATABASE_URL=postgresql://...`
+   - `SUPABASE_JWT_SECRET=...`
+   - Optional: `SUPABASE_JWT_ISSUER`, `SUPABASE_JWT_AUDIENCE`, `RAG_ENABLED`, `OPENAI_API_KEY`, `PINECONE_API_KEY`
+3. Run with Gunicorn:
+   ```bash
+   gunicorn -c gunicorn.conf.py wsgi:app
+   ```
+4. Reverse proxy:
+   - Use Nginx/Caddy to proxy HTTPS -> `127.0.0.1:8000`
+   - Limit allowed origins via `FRONTEND_ORIGINS` (comma-separated)
+5. systemd (high level):
+   - Create a service that runs `gunicorn -c gunicorn.conf.py wsgi:app`
+   - Ensure `Environment=` lines for required env vars
+   - Use `journalctl -u <service>` for logs

@@ -1,11 +1,13 @@
 """Therapy Chatbot Flask Backend."""
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, g
 from sqlalchemy import text
 from flask_cors import CORS
 from dotenv import load_dotenv
 from db import init_db, db
 from src.prompt import system_prompt
 import os
+import time
+import logging
 
 # Import route blueprints
 from routes.chat import chat_bp
@@ -20,11 +22,31 @@ from routes.user import user_bp
 from routes.journal import journal_bp
 from routes.chat_profile import chat_profile_bp
 
-# Initialize Flask app
-app = Flask(__name__)
+ENV = os.getenv("ENV", os.getenv("FLASK_ENV", "development")).lower()
+is_production = ENV == "production"
+app_start_time = time.time()
 
 # Load environment variables from root-level .env
 load_dotenv()
+
+# Re-evaluate ENV after loading .env
+ENV = os.getenv("ENV", os.getenv("FLASK_ENV", "development")).lower()
+is_production = ENV == "production"
+
+# Initialize Flask app
+app = Flask(__name__)
+app.config["ENV"] = ENV
+app.config["DEBUG"] = False if is_production else app.config.get("DEBUG", True)
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False if is_production else True
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+)
+
+# Enforce auth bypass safety in production
+if is_production and os.getenv("AUTH_BYPASS", "false").lower() in ("1", "true", "yes"):
+    raise RuntimeError("AUTH_BYPASS cannot be enabled in production.")
 
 # LLM initialization state
 chat_model = None
@@ -64,7 +86,11 @@ extra_origins = [
     for origin in os.getenv('FRONTEND_ORIGINS', '').split(',')
     if origin.strip()
 ]
-frontend_origins.extend(extra_origins)
+if extra_origins:
+    frontend_origins = extra_origins
+
+if is_production and "*" in frontend_origins:
+    raise RuntimeError("FRONTEND_ORIGINS cannot include '*' in production.")
 
 CORS(
     app,
@@ -139,6 +165,67 @@ else:
     print("LLM not initialized.")
 
 
+def _check_pinecone_client():
+    if not os.getenv("PINECONE_API_KEY"):
+        raise RuntimeError("PINECONE_API_KEY is required when RAG_ENABLED=true.")
+    try:
+        from pinecone import Pinecone
+        Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+    except Exception as exc:
+        raise RuntimeError(f"Pinecone client initialization failed: {exc}") from exc
+
+
+def _prewarm_embeddings():
+    try:
+        from src.helper import download_hugging_face_embeddings
+        download_hugging_face_embeddings()
+        return True
+    except Exception as exc:
+        logging.exception("Embedding prewarm failed: %s", exc)
+        return False
+
+
+def run_startup_checks():
+    required = []
+    if is_production:
+        required.append("DATABASE_URL")
+    if os.getenv("RAG_ENABLED", "false").lower() in ("1", "true", "yes"):
+        required.extend(["OPENAI_API_KEY", "PINECONE_API_KEY"])
+
+    missing = [name for name in required if not os.getenv(name)]
+    if missing:
+        raise RuntimeError(f"Missing required env vars: {', '.join(missing)}")
+
+    db.session.execute(text("SELECT 1"))
+
+    if os.getenv("RAG_ENABLED", "false").lower() in ("1", "true", "yes"):
+        _check_pinecone_client()
+
+
+if is_production:
+    run_startup_checks()
+    if os.getenv("PREWARM_ON_START", "false").lower() in ("1", "true", "yes"):
+        prewarm_ok = _prewarm_embeddings()
+        if not prewarm_ok:
+            raise RuntimeError("Embedding prewarm failed in production.")
+else:
+    if os.getenv("PREWARM_ON_START", "false").lower() in ("1", "true", "yes"):
+        _prewarm_embeddings()
+
+
+@app.before_request
+def _start_timer():
+    g._req_start = time.time()
+
+
+@app.after_request
+def _log_request(response):
+    if request.path.startswith("/api"):
+        duration_ms = int((time.time() - g._req_start) * 1000)
+        logging.info("%s %s %s %sms", request.method, request.path, response.status_code, duration_ms)
+    return response
+
+
 # Register route blueprints
 app.register_blueprint(chat_bp)
 app.register_blueprint(mood_bp)
@@ -163,10 +250,18 @@ def health():
         db_status = 'connected'
     except Exception as e:
         db_status = f'error: {str(e)}'
-    
+
+    engine_name = db.engine.url.drivername if db.engine else "unknown"
+    auth_mode = "bypass" if os.getenv("AUTH_BYPASS", "false").lower() in ("1", "true", "yes") else "jwt"
+    uptime_seconds = int(time.time() - app_start_time)
+
     return jsonify({
         'status': 'ok',
         'db': db_status,
+        'db_driver': engine_name,
+        'auth_bypass': auth_mode == "bypass",
+        'rag_enabled': os.getenv("RAG_ENABLED", "false").lower() in ("1", "true", "yes"),
+        'uptime_seconds': uptime_seconds,
         'rag_available': rag_chain is not None,
     }), 200
 
@@ -198,4 +293,4 @@ def legacy_chat():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=not is_production, use_reloader=not is_production)
